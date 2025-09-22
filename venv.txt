@@ -1,0 +1,12 @@
+python -m venv venv_name
+
+.\project\Scripts\activate 
+
+pip install numpy pandas matplotlib plotly seaborn dash
+
+pip freeze > requirements.txt
+
+pip install -r requirements.txt
+
+
+.\project\Scripts\deactivate
