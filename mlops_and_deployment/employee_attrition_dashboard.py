@@ -9,6 +9,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import joblib
 import base64
+from pathlib import Path
 from io import StringIO
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, confusion_matrix, classification_report
 from sklearn.linear_model import LogisticRegression
@@ -210,16 +211,21 @@ st.markdown("""
 # ====================== MODEL FUNCTIONS ======================
 @st.cache_resource
 def load_model():
-    """Load the pre-trained model with error handling"""
     try:
-        # Try to load the model - if files don't exist, create a simple model
-        try:
-            model = joblib.load(r"best_final_stacking.joblib")  
-            train_columns = joblib.load(r"train_columns.pkl")
-            return model, train_columns
-        except FileNotFoundError:
-            st.warning("Model files not found. Using demo mode with simulated predictions.")
-            return "demo", None
+        base_path = Path(__file__).parent
+        
+        model_path = base_path / "best_final_stacking.joblib"
+        cols_path = base_path / "train_columns.pkl"
+
+        model = joblib.load(model_path)
+        train_columns = joblib.load(cols_path)
+        
+        return model, train_columns
+
+    except FileNotFoundError:
+        st.warning("Model files not found. Using demo mode with simulated predictions.")
+        return "demo", None
+
     except Exception as e:
         st.error(f"Error loading model: {e}")
         return "demo", None
@@ -1630,3 +1636,4 @@ st.markdown(
     "</div>", 
     unsafe_allow_html=True
 )
+
